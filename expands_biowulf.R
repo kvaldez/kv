@@ -1,16 +1,13 @@
 library(expands)
 library(phylobase)
+
 # args[1] snv maf
 # args[2] cn calls
 # args[3] output file prefix
 args <- commandArgs(trailingOnly=TRUE)
-
 args_1 = read.delim(args[1],stringsAsFactors = F)
 args_2 = read.delim(args[2],stringsAsFactors = F)
 
-
-#args_1 = read.delim('/Users/valdezkm/Documents/Real_Tofilon/noMouse_mutect2/testing.maf',stringsAsFactors = F)
-#args_2 = read.delim('/Users/valdezkm/Documents/Real_Tofilon/noMouse_cnvkit/control_2_S25_human_better_calls.cns',stringsAsFactors = F)
 
 
 create_snv = function(maf) {
