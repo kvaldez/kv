@@ -1,13 +1,20 @@
 fileN = '/Users/valdezkm/Documents/LP/Val_ClinOmics_Compass_026_T1D_E.strelka.snvs.raw.vcf'
 
-outFile = open('/Users/valdezkm/Documents/LP/vaf_py.vcf','w')
+outFile = open('/Users/valdezkm/Documents/LP/gitHub/kv/vaf_py.vcf','w')
 
 with open(fileN) as myfile:
-    comm = []
+    info = []
+    notInfo = []
+    chrom = []
     dat = []
     for each in myfile:                                                      # for each line in file
-        if each.startswith('#'):                                           # subset commented section
-            comm.append(each.strip())
+        if each.startswith('##'):                                           # subset commented section
+            if each.startswith('##INFO'):
+                info.append(each.strip())
+            if not each.startswith('##INFO'):
+                notInfo.append(each.strip())
+        if each.startswith('#CHROM'):
+            chrom.append(each.strip())
         if not each.startswith('#'):                                       # subset table and parse ACGTs, use tier 1
             As = float(each.split('\t')[10].split(':')[4].split(',')[0])
             Cs = float(each.split('\t')[10].split(':')[5].split(',')[0])
@@ -40,7 +47,9 @@ with open(fileN) as myfile:
             each = eachStr.join(sepEach)                                    # redefine orig each variable
             dat.append(each.strip())
 
-    together = comm + dat                                                   # put vcf file back together
+    info.append('##INFO=<ID=VAF,Number=1,Type=Float,Description="Variant Allele Frequency">')
+
+    together = notInfo + info + chrom + dat                                                   # put vcf file back together
     for x in together:
         outFile.write(x.strip() + '\n')
 
