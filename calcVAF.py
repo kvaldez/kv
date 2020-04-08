@@ -7,13 +7,13 @@ with open(fileN) as myfile:
     notInfo = []
     chrom = []
     dat = []
-    for each in myfile:                                                      # for each line in file
+    for each in myfile:                                                     # for each line in file
         if each.startswith('##'):                                           # subset commented section
-            if each.startswith('##INFO'):
+            if each.startswith('##INFO'):                                   # subset info lines, will add vaf later
                 info.append(each.strip())
-            if not each.startswith('##INFO'):
+            if not each.startswith('##INFO'):                               # if not info lines, subset
                 notInfo.append(each.strip())
-        if each.startswith('#CHROM'):
+        if each.startswith('#CHROM'):                                       # pull out table header
             chrom.append(each.strip())
         if not each.startswith('#'):                                       # subset table and parse ACGTs, use tier 1
             As = float(each.split('\t')[10].split(':')[4].split(',')[0])
@@ -47,9 +47,9 @@ with open(fileN) as myfile:
             each = eachStr.join(sepEach)                                    # redefine orig each variable
             dat.append(each.strip())
 
-    info.append('##INFO=<ID=VAF,Number=1,Type=Float,Description="Variant Allele Frequency">')
+    info.append('##INFO=<ID=VAF,Number=1,Type=Float,Description="Variant Allele Frequency">')   # add info tag vaf to header
 
-    together = notInfo + info + chrom + dat                                                   # put vcf file back together
+    together = notInfo + info + chrom + dat                                                     # put vcf file back together
     for x in together:
         outFile.write(x.strip() + '\n')
 
